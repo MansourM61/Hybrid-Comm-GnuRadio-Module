@@ -1,0 +1,7 @@
+/*!
+ * \defgroup block GNU Radio RF_COMM C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the RF_COMM GNU Radio
+ *        module are listed here or in the subcategories below.
+ *
+ */
+

@@ -1,0 +1,82 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2020 gr-RF_Comm author.
+ *
+ * This is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#ifndef INCLUDED_RF_COMM_FSP_LOSS_H
+#define INCLUDED_RF_COMM_FSP_LOSS_H
+
+#include <RF_Comm/api.h>
+#include <gnuradio/sync_block.h>
+
+namespace gr {
+  namespace RF_Comm {
+
+    /*!
+     * \brief <+description of block+>
+     * \ingroup RF_Comm
+     *
+     */
+    class RF_COMM_API FSP_Loss : virtual public gr::sync_block
+    {
+     public:
+      typedef boost::shared_ptr<FSP_Loss> sptr;
+
+      /*!
+       * \brief Return a shared_ptr to a new instance of RF_Comm::FSP_Loss.
+       *
+       * To avoid accidental use of raw pointers, RF_Comm::FSP_Loss's
+       * constructor is in a private implementation
+       * class. RF_Comm::FSP_Loss::make is the public interface for
+       * creating new instances.
+       */
+      static sptr make(float linkLen, float freq);
+
+      /*!
+       * \brief Set link length
+       * 
+       * \param linkLen
+       * link length (m)
+       */
+      virtual void set_LinkLen(float linkLen) = 0;
+
+      /*!
+       * \brief Return link length (m)
+       */
+      virtual float get_LinkLen(void) = 0;
+
+      /*!
+       * \brief Set frequency
+       * 
+       * \param freq
+       * frequency (GHz)
+       */
+      virtual void set_Freq(float freq) = 0;
+
+      /*!
+       * \brief Return frequency (GHz)
+       */
+      virtual float get_Freq(void) = 0;
+
+    };
+
+  } // namespace RF_Comm
+} // namespace gr
+
+#endif /* INCLUDED_RF_COMM_FSP_LOSS_H */
+
