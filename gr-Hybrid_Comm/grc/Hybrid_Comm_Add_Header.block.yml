@@ -1,0 +1,75 @@
+id: Hybrid_Comm_Add_Header
+label: Add Header
+category: '[Hybrid Communication]'
+
+templates:
+  imports: import Hybrid_Comm
+  make: Hybrid_Comm.Add_Header(${packetSize}, ${preamble}, ${label}, ${samplesPerBit})
+  callbacks:
+  - set_Preamble(${preamble})
+  - set_Label(${label})
+  - set_SamplesPerBit(${samplesPerBit})
+  - set_PacketSize(${packetSize})
+
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: preamble
+  label: Preamble
+  dtype: raw
+  default: (0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0)
+- id: label
+  label: Packet label
+  dtype: string
+  default: L1
+- id: samplesPerBit
+  label: Samples per bit
+  dtype: int
+  default: 1
+- id: packetSize
+  label: Input packet samples size
+  dtype: int
+  default: 1000
+
+
+asserts:
+  - ${ len(preamble) >= 1 }
+  - ${ samplesPerBit >= 1 }
+  - ${ packetSampLen >= 1 }
+
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: str
+  dtype: byte
+- label: spb
+  dtype: byte
+  optional: 1
+
+outputs:
+- label: pack
+  dtype: byte
+- label: spb
+  dtype: byte
+  optional: 1
+
+
+documentation: |-
+  The blocks adds a header to the incoming data array. It adds a preamble as well as a label and a counter to the packet section.
+  The pattern will be like:  [Preamble, Label, Counter, Data]
+  Counter field has 8 bits length.
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
