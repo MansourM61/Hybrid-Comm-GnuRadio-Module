@@ -1,0 +1,70 @@
+id: Hybrid_Comm_Rx_Parallel_Switch
+label: Rx Parallel Switch
+category: '[Hybrid Communication]'
+
+templates:
+  imports: import Hybrid_Comm
+  make: Hybrid_Comm.Rx_Parallel_Switch(${packetSize}, ${thresh}, ${sampsPerBit})
+  callbacks:
+  - set_PacketSize(${packetSize})
+  - set_Thresh(${thresh})
+  - set_SampsPerBit(${sampsPerBit})
+
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: packetSize
+  label: Input packet samples size
+  dtype: int
+  default: 1000
+- id: thresh
+  label: Link selection threshold
+  dtype: float
+  default: 0
+- id: sampsPerBit
+  label: Samples per bit
+  dtype: int
+  default: 10
+
+
+asserts:
+  - ${ packetSize >= 1 }
+  - ${ sampsPerBit >= 1 }
+
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: link 1
+  dtype: byte
+- label: link 2
+  dtype: byte
+- label: sel
+  dtype: float
+
+outputs:
+- label: out
+  dtype: byte
+- label: spb
+  dtype: byte
+  optional: 1
+
+
+documentation: |-
+  The block is used to act as a parallel switch at receiver.
+  If 'select' >= 0, ' output' is connected to 'link 1' otherwise 'link 2'.
+  Both links must have the same data rate.
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

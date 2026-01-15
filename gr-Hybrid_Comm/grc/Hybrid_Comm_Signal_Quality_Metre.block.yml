@@ -1,0 +1,77 @@
+id: Hybrid_Comm_Signal_Quality_Metre
+label: Signal Quality Metre
+category: '[Hybrid Communication]'
+
+templates:
+  imports: import Hybrid_Comm
+  make: Hybrid_Comm.Signal_Quality_Metre(${packetSize}, ${sampsPerSymb}, ${repr(measType)}, ${edgeFindingRange})
+  callbacks:
+  - set_SampsPerSymb(${sampsPerSymb})
+  - set_PacketSize(${packetSize})
+  - set_MeasType(${repr(measType)})
+  - set_EdgeFindingRange(${edgeFindingRange})
+
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: sampsPerSymb
+  label: Samples per symbol
+  dtype: int
+  default: 10
+- id: packetSize
+  label: Input packet samples size
+  dtype: int
+  default: 1000
+- id: measType
+  label: Measurement type
+  dtype: enum
+  options: ['Signal Power', 'Noise Power', 'Signal-to-noise Ratio (SNR)', 'Q-factor']
+  option_labels: [Signal Power, Noise Power, Signal-to-noise Ratio (SNR), Q-factor]
+  default: Signal Power
+- id: edgeFindingRange
+  label: Window range to find edge
+  dtype: int
+  default: 2
+
+
+asserts:
+  - ${ sampsPerSymb >= 1 }
+  - ${ winSize >= 2 }
+  - ${ edgeFindingRange >= 2 }
+
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: sig
+  dtype: float
+
+outputs:
+- label: mrt
+  dtype: float
+- label: mean
+  dtype: float
+  optional: 1
+
+
+documentation: |-
+  The block assesses the incoming signal over the given sample window.
+  The merits of the signal can be:
+  1- Signal power
+  2- Noise power
+  3- Signal-to-noise ratio (SNR)
+  4- Q-factor
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

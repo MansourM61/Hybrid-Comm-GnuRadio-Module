@@ -1,0 +1,72 @@
+id: Hybrid_Comm_Stream_Aligner
+label: Stream Aligner
+category: '[Hybrid Communication]'
+
+templates:
+  imports: import Hybrid_Comm
+  make: Hybrid_Comm.Stream_Aligner(${packetSize})
+  callbacks:
+  - set_PacketSize(${packetSize})
+
+  
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: packetSize
+  label: Input packet samples size
+  dtype: int
+  default: 1000
+
+
+asserts:
+  - ${ packetSize >= 1 }
+
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: str 1
+  dtype: byte
+- label: sync 1
+  dtype: byte
+- label: count 1
+  dtype: int
+  
+- label: str 2
+  dtype: byte
+- label: sync 2
+  dtype: byte
+- label: count 2
+  dtype: int
+
+outputs:
+- label: seq 1
+  dtype: byte
+- label: seq 2
+  dtype: byte
+- label: ctrl
+  dtype: byte
+  optional: 1
+
+
+documentation: |-
+  The blocks aligns two input streams based on the sync pulses.
+  It also checks the counter input of each stream and makes sure the output streams are from the same packet.
+  If the sync pulses are not aligned, 'ctl' will be equal to misalignment value and both outputs are set to -1.
+  If the sync pulses indices have non-zero offset, 'ctl' will be equal to offset value and both outputs are set to -2.
+  If the counter values difference is larger than available buffer bank, 'ctl' will be equal to counter difference value and both outputs are set to -3.
+  If the block is filling the buffer, 'ctl' will be equal to counter difference value and both outputs are set to -4.
+  If the sync pulses are aligned, zero-offset with counter difference within buffer bank capacity,
+  the output 'ctl' is the difference between counter values of input stream and the outputs are aligned signals.
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

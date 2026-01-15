@@ -1,0 +1,65 @@
+id: Hybrid_Comm_Slicer
+label: Slicer
+category: '[Hybrid Communication]'
+
+templates:
+  imports: import Hybrid_Comm
+  make: Hybrid_Comm.Slicer(${packetSize}, ${avgWinSize}, ${thresh})
+  callbacks:
+  - set_AvgWinSize(${avgWinSize})
+  - set_PacketSize(${packetSize})
+  - set_Thresh(${thresh})
+
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: avgWinSize
+  label: Averaging window size
+  dtype: int
+  default: 10
+- id: packetSize
+  label: Input packet samples size
+  dtype: int
+  default: 1000
+- id: thresh
+  label: Threshold
+  dtype: float
+  default: 0.0
+
+
+asserts:
+  - ${ avgWinSize >= 1 }
+  - ${ packetSize >= avgWinSize }
+
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: in
+  dtype: float
+- label: thresh
+  dtype: float
+  optional: 1
+
+outputs:
+- label: out
+  dtype: byte
+
+
+documentation: |-
+  The block quantises the incoming two level signal into 0 or 1 bits.
+  The quantisation is either based on the fixed threshold parameter or input 'thresh' pin.
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
